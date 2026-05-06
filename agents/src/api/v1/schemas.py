@@ -1,4 +1,4 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 from typing import Optional
 
 class BarcodeRequest(BaseModel):
@@ -30,3 +30,10 @@ class ProductAnalysisResponse(BaseModel):
     neutral_ingredients: list[Ingredient] = []
     caution_ingredients: list[Ingredient] = []
     avoid_ingredients: list[Ingredient] = []
+    
+class RecommendationRequest(BaseModel):
+    query: str = Field(..., description="User's request for product recommendation, e.g., 'средство для сухой чувствительной кожи'")
+    collection_id: str = Field(default="global_collection", description="ID of the RAG collection to search in")
+class RoutineRequest(BaseModel):
+    query: str = Field(..., description="User request for routine, e.g., 'жирная кожа акне'")
+    collection_id: str = Field(default="global_collection")

@@ -170,7 +170,55 @@ async def format_analysis_for_telegram(analysis_text: str) -> str:
         elif line.startswith("- "):
             html_lines.append(f"• {html.escape(line[2:])}")
         else:
-            # для остальных строк экранируем HTML, но оставляем эмодзи
             html_lines.append(html.escape(line).replace("&amp;", "&"))
 
     return "\n".join(html_lines)
+
+
+async def get_product_recommendations(user_query: str) -> str:
+    """
+    Отправляет запрос пользователя на эндпоинт рекомендательного агента
+    и возвращает отформатированный ответ.
+    """
+    url = f"{settings.agents_api_base}/api/v1/crew/recommend_products"
+    
+    payload = {
+        "query": user_query,
+        "collection_id": "global_collection"
+    }
+
+    # Увеличиваем таймаут до 180 секунд (3 минуты)
+    timeout = httpx.Timeout(
+        connect=10.0,   # подключение
+        read=180.0,     # ожидание ответа от агента
+        write=10.0,     # отправка запроса
+        pool=10.0       # ожидание свободного соединения
+    )
+
+    try:
+        logger.info(f"Sending recommendation request to API: {user_query}")
+        
+        async with httpx.AsyncClient(timeout=timeout) as client:
+            response = await client.post(url, json=payload)
+            
+            if response.status_code == 200:
+                data = response.json()
+                return data.get("recommendations", "Не удалось получить рекомендации.")
+            
+            elif response.status_code == 400:
+                error_detail = response.json().get("detail", "Ошибка в запросе")
+                return f"❌ Ошибка ввода: {error_detail}"
+            
+            else:
+                logger.error(f"API Error {response.status_code}: {response.text}")
+                return "❌ Сервис временно недоступен. Попробуйте позже."
+
+    except httpx.ReadTimeout:
+        logger.error("Recommendation API Read Timeout (took too long)")
+        return "⏳ Превышено время ожидания ответа от сервиса. Попробуйте упростить запрос или повторите позже."
+    except httpx.ConnectError:
+        logger.error("Could not connect to Recommendation API")
+        return "❌ Не удалось соединиться с сервером рекомендаций."
+    except Exception as e:
+        logger.error(f"Unexpected error in recommendation service: {e}", exc_info=True)
+        return "❌ Произошла непредвиденная ошибка."

@@ -16,3 +16,4 @@ bot/mvenv
 crew_agents.egg-info
 .vscode/
 bot/aiogram_bot.egg-info
+agents/build/

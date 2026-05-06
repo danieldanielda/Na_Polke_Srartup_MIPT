@@ -168,5 +168,6 @@ dependencies = [
     "websockets",
     "yarl",
     "youtube-transcript-api",
-    "zipp"
+    "zipp",
+    "langfuse"
 ]

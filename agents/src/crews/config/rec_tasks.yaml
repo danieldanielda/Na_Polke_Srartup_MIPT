@@ -1,0 +1,22 @@
+recommendation_task:
+  description: >
+    The user has requested a product recommendation with the following query: {user_query}.
+
+    1. Analyze the query to extract key parameters:
+       - Skin Type (e.g., dry, oily, sensitive)
+       - Concern/Goal (e.g., hydration, acne, anti-aging)
+       - Product Type preference (if any)
+
+    2. Use the RAG Query Tool to search for products. 
+       Formulate precise queries using metadata like 'тип кожи', 'тип продукта'.
+
+    3. Select the top 3-5 most relevant products.
+
+    4. Present the recommendations in a structured, friendly format in Russian.
+  expected_output: >
+    A structured list of recommended products in Russian. 
+    Format:
+    🌟 Рекомендация 1: [Название]
+    💧 Почему подходит: [Объяснение]
+    ✨ Ключевые свойства: [Свойства]
+  agent: recommendation_agent

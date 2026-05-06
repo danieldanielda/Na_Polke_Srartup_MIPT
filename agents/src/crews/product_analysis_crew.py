@@ -1,6 +1,6 @@
-# src/my_project/product_analysis_crew.py
 from crewai import Agent, Crew, Process, Task, LLM
 from crewai.project import CrewBase, agent, crew, task
+from langfuse import observe
 
 from src.tools.rag_tool import RAGQueryTool
 from src.tools.sonar_general_search_tool import SonarGeneralSearchTool
@@ -48,7 +48,7 @@ class ProductAnalysisCrew():
             config=self.agents_config['ingredient_summarizer'],
             verbose=True,
             llm=llm,
-            tools=[inci_tool], # The summarizer will also need the inci_tool to fetch ingredient descriptions
+            tools=[inci_tool],
         )
 
     @task
@@ -85,3 +85,13 @@ class ProductAnalysisCrew():
             process=Process.sequential,
             verbose=True,
         )
+
+    # Добавляем метод-обертку для мониторинга
+    @observe(name="Product Analysis Crew")
+    def run_with_monitoring(self, inputs: dict, analysis_type: str = "description"):
+        """
+        Запускает Crew и отправляет трейс в Langfuse.
+        """
+        crew_instance = self.crew(analysis_type=analysis_type)
+        result = crew_instance.kickoff(inputs=inputs)
+        return result

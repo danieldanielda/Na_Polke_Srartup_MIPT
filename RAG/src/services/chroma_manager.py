@@ -13,7 +13,6 @@ logger = logging.getLogger(__name__)
 # Global constant for the single collection name
 GLOBAL_COLLECTION_NAME = "global_rag_collection"
 
-
 class ChromaManager:
     """
     Singleton Manager for working with ChromaDB in docker container.

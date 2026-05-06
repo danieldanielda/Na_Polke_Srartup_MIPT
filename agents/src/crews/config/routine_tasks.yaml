@@ -1,0 +1,34 @@
+build_routine_task:
+  description: >
+    The user wants a skincare routine. 
+    User Input: {user_query}
+    
+    Follow these steps strictly:
+    1. Analyze the user's skin type (e.g., oily, dry) and concerns (e.g., acne, aging).
+    2. Use the RAG Query Tool to find the BEST product for each of these 3 categories:
+       - Cleanser (Гель/Пенка для умывания)
+       - Treatment (Тоник, Сыворотка или Эссенция)
+       - Moisturizer (Крем или Гель-крем)
+       
+       For each category, search specifically for products matching the user's skin type.
+       Retrieve full ingredient lists for the top candidate in each category.
+
+    3. Check for conflicts between the 3 selected products.
+       Critical Conflicts to avoid in the same routine step:
+       - Retinol mixed with AHA/BHA acids.
+       - Pure Vitamin C (L-Ascorbic Acid) mixed with Niacinamide (if pH differs significantly, though modern formulas are often stable, better to separate if unsure).
+       - Benzoyl Peroxide with Vitamin C.
+       
+       If a conflict is found, replace the conflicting product with another option from RAG.
+
+    4. Format the final routine in Russian.
+       Structure:
+       - 🧖‍♀️ Тип кожи и цель
+       - ☀️ Утренняя рутина (или общая, если не указано)
+         1. Очищение: [Название] - [Почему подходит]
+         2. Лечение/Тонизирование: [Название] - [Ключевой актив]
+         3. Увлажнение: [Название] - [Тип текстуры]
+       - ⚠️ Важные предупреждения (если есть конфликты или особенности нанесения).
+  expected_output: >
+    A structured skincare routine in Russian with 3 specific products and explanations.
+  agent: routine_architect

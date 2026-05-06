@@ -14,5 +14,8 @@ dependencies = [
     "httpx>=0.24",
     "pydantic>=2.0",
     "pydantic-settings>=2.0",
-    "openai"
+    "openai",
+    "langfuse",
+    "asyncpg",
+    "sqlalchemy"
 ]

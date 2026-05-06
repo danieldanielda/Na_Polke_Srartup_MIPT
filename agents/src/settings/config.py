@@ -21,3 +21,6 @@ class CrewSettings(BaseSettings):
     
     inci_path: str = "src/data/inci.json"
     most_used_inci_path: str = "src/data/incibeauty_ingredients_full_most.json"
+    langfuse_secret_key: str
+    langfuse_public_key: str
+    langfuse_host: str
