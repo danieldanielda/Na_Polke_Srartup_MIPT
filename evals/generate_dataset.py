@@ -1,98 +1,139 @@
 import json
 import random
 import os
-import itertools
 
-OUTPUT_DIR = "./" # Лучше хранить в папке eval
+# Фиксируем сид для воспроизводимости (можно убрать для полной случайности)
+random.seed(2026)
+
+OUTPUT_DIR = "./"
 os.makedirs(OUTPUT_DIR, exist_ok=True)
 
-# --- КОНСТАНТЫ ДЛЯ ГЕНЕРАЦИИ H2 ---
-
-# Расширенная база знаний ингредиентов (INCI -> Category)
+# ==============================================================================
+# 1. РАСШИРЕННАЯ БАЗА ЗНАНИЙ ИНГРЕДИЕНТОВ (INCI -> Category)
+# ==============================================================================
 INGREDIENT_KB = {
-    # Базовые растворители/основы
-    "Aqua": "safe", "Water": "safe", "Alcohol Denat": "caution", "Glycerin": "safe", "Butylene Glycol": "safe",
-    "Propanediol": "safe", "Ethanol": "caution", "Isopropyl Alcohol": "avoid",
+    # Базовые растворители
+    "Aqua": "safe", "Water": "safe", "Alcohol Denat": "caution", "Glycerin": "safe", 
+    "Butylene Glycol": "safe", "Propanediol": "safe", "Ethanol": "caution", 
+    "Isopropyl Alcohol": "avoid", "Pentylene Glycol": "safe",
     
-    # Эмоленты и увлажнители
+    # Эмоленты и масла
     "Squalane": "safe", "Caprylic/Capric Triglyceride": "safe", "Cetearyl Alcohol": "safe",
     "Dimethicone": "neutral", "Cyclomethicone": "neutral", "Shea Butter": "safe",
-    "Jojoba Oil": "safe", "Hyaluronic Acid": "safe", "Sodium Hyaluronate": "safe",
+    "Jojoba Oil": "safe", "Simmondsia Chinensis Seed Oil": "safe", "Tocopheryl Acetate": "safe",
+    "Cetearyl Olivate": "safe", "Sorbitan Olivate": "safe",
     
-    # Активные вещества (Anti-age/Acne)
+    # Активы
     "Niacinamide": "safe", "Salicylic Acid": "caution", "Retinol": "caution", 
-    "Retinyl Palmitate": "caution", "Ascorbic Acid": "caution", "Vitamin C": "safe",
+    "Retinyl Palmitate": "caution", "Ascorbic Acid": "caution", "Sodium Ascorbyl Phosphate": "safe",
     "Peptides": "safe", "Palmitoyl Pentapeptide-4": "safe", "Azelaic Acid": "caution",
-    "Benzoyl Peroxide": "caution", "Adapalene": "caution",
+    "Benzoyl Peroxide": "caution", "Adapalene": "caution", "Centella Asiatica Extract": "safe",
+    "Madecassoside": "safe", "Allantoin": "safe", "Bisabolol": "safe",
     
-    # Консерванты (часто вызывают вопросы)
+    # Увлажнители
+    "Hyaluronic Acid": "safe", "Sodium Hyaluronate": "safe", "Hydrolyzed Hyaluronic Acid": "safe",
+    "Sodium PCA": "safe", "Trehalose": "safe", "Panthenol": "safe",
+    
+    # Консерванты
     "Phenoxyethanol": "neutral", "Ethylhexylglycerin": "neutral", "Sodium Benzoate": "safe",
     "Potassium Sorbate": "safe", "Methylparaben": "caution", "Propylparaben": "caution",
     "Triclosan": "avoid", "Dmdm Hydantoin": "avoid", "Methylisothiazolinone": "avoid",
-    "Chlorphenesin": "neutral", "Benzyl Alcohol": "neutral",
+    "Chlorphenesin": "neutral", "Benzyl Alcohol": "neutral", "Caprylyl Glycol": "safe",
     
     # Отдушки и аллергены
     "Parfum": "caution", "Fragrance": "caution", "Limonene": "caution", 
     "Linalool": "caution", "Citronellol": "caution", "Geraniol": "caution",
     "Eugenol": "caution", "Coumarin": "caution",
     
-    # ПАВы и загустители
+    # ПАВы, загустители, хелаторы, pH-регуляторы
     "Sodium Laureth Sulfate": "caution", "Sodium Lauryl Sulfate": "avoid",
-    "Cocamidopropyl Betaine": "safe", "Xanthan Gum": "safe", "Carbomer": "safe"
+    "Cocamidopropyl Betaine": "safe", "Xanthan Gum": "safe", "Carbomer": "safe",
+    "Hydroxyethylcellulose": "safe", "Triethanolamine": "caution",
+    "Disodium EDTA": "neutral", "Citric Acid": "neutral", "Sodium Citrate": "safe",
+    "Maltodextrin": "safe", "Tocopherol": "safe"
 }
 
-# Компоненты для сборки продуктов (Combinatorial Generation)
-BASES = ["Aqua", "Glycerin", "Butylene Glycol", "Propanediol"]
-EMOLLIENTS = ["Squalane", "Caprylic/Capric Triglyceride", "Dimethicone", "Shea Butter"]
-ACTIVES_SAFE = ["Niacinamide", "Hyaluronic Acid", "Peptides", "Panthenol"]
-ACTIVES_CAUTION = ["Retinol", "Salicylic Acid", "Ascorbic Acid", "Azelaic Acid"]
-PRESERVATIVES_SAFE = ["Phenoxyethanol", "Ethylhexylglycerin", "Sodium Benzoate"]
-PRESERVATIVES_AVOID = ["Triclosan", "Dmdm Hydantoin", "Methylisothiazolinone"] # Для проблемных продуктов
-FRAGRANCES = ["Parfum", "Limonene", "Linalool"]
+# ==============================================================================
+# 2. ГЕНЕРАТОР РЕАЛИСТИЧНЫХ НАЗВАНИЙ ПРОДУКТОВ
+# ==============================================================================
+BRANDS = ["La Roche-Posay", "CeraVe", "Vichy", "The Ordinary", "Bioderma", "Clinique", "Avene", "Eucerin", "Paula's Choice", "Kiehl's"]
+PRODUCT_LINES = ["Toleriane", "Effaclar", "Cicaplast", "Hydrating", "Retinol", "Vitamin C", "Pure Clinical", "Minéral", "Sensibio", "Hydro Boost"]
+TYPES = ["Cream", "Serum", "Gel", "Cleanser", "Toner", "Emulsion", "Balm", "Lotion", "Fluid"]
+CLAIMS = ["Ultra Soothing", "Anti-Aging", "Pore-Refining", "Intensive Hydration", "SPF 30", "5% Niacinamide", "For Sensitive Skin", "Oil-Free", "Night Recovery"]
 
-def generate_unique_inci_list(product_type="normal"):
-    """Генерирует уникальный список ингредиентов."""
+def generate_realistic_name():
+    brand = random.choice(BRANDS)
+    line = random.choice(PRODUCT_LINES)
+    t = random.choice(TYPES)
+    claim = random.choice(CLAIMS)
+    
+    # Комбинируем в 3 реалистичных формата
+    templates = [
+        f"{brand} {line} {claim} {t}",
+        f"{brand} {t} with {claim}",
+        f"{brand} {line} {t} {claim}"
+    ]
+    return random.choice(templates)
+
+# ==============================================================================
+# 3. ГЕНЕРАТОР РЕАЛИСТИЧНЫХ INCI-СПИСКОВ
+# ==============================================================================
+# Категоризированные пулы для симуляции порядка по концентрации
+BASES = ["Aqua", "Glycerin", "Butylene Glycol", "Propanediol", "Pentylene Glycol"]
+EMOLLIENTS = ["Squalane", "Caprylic/Capric Triglyceride", "Cetearyl Alcohol", "Dimethicone", "Shea Butter", "Jojoba Oil", "Tocopheryl Acetate"]
+ACTIVES_SAFE = ["Niacinamide", "Sodium Hyaluronate", "Hyaluronic Acid", "Panthenol", "Centella Asiatica Extract", "Peptides", "Allantoin", "Bisabolol"]
+ACTIVES_CAUTION = ["Retinol", "Salicylic Acid", "Ascorbic Acid", "Azelaic Acid", "Benzoyl Peroxide"]
+THICKENERS = ["Xanthan Gum", "Carbomer", "Hydroxyethylcellulose", "Cetearyl Olivate", "Sorbitan Olivate"]
+PRESERVATIVES_SAFE = ["Phenoxyethanol", "Ethylhexylglycerin", "Sodium Benzoate", "Caprylyl Glycol", "Potassium Sorbate"]
+PRESERVATIVES_AVOID = ["Triclosan", "Dmdm Hydantoin", "Methylisothiazolinone"]
+FRAGRANCES = ["Parfum", "Limonene", "Linalool", "Citronellol"]
+ADJUNCTS = ["Disodium EDTA", "Citric Acid", "Sodium Citrate", "Tocopherol", "Maltodextrin"]
+
+def generate_realistic_inci(product_type="normal"):
     inci = []
     
-    # 1. Основа (всегда есть)
-    inci.append(random.choice(BASES))
-    inci.append(random.choice(["Glycerin", "Sodium Hyaluronate"]))
+    # 1. Основа (всегда первые 1-3 позиции)
+    inci.extend(random.sample(BASES, random.randint(2, 3)))
     
-    # 2. Эмоленты (1-2 шт)
-    inci.extend(random.sample(EMOLLIENTS, random.randint(1, 2)))
+    # 2. Эмоленты/масла (следующие 2-4)
+    inci.extend(random.sample(EMOLLIENTS, random.randint(2, 4)))
     
     # 3. Активы
     if product_type == "problematic":
         inci.append(random.choice(ACTIVES_CAUTION))
-        inci.append(random.choice(PRESERVATIVES_AVOID)) # Опасный консервант
+        inci.append(random.choice(PRESERVATIVES_AVOID))
     elif product_type == "active":
-        inci.extend(random.sample(ACTIVES_CAUTION, 2))
+        inci.extend(random.sample(ACTIVES_CAUTION, random.randint(1, 2)))
         inci.append(random.choice(PRESERVATIVES_SAFE))
-    else: # normal / sensitive
-        inci.extend(random.sample(ACTIVES_SAFE, random.randint(1, 2)))
+    else:
+        inci.extend(random.sample(ACTIVES_SAFE, random.randint(2, 3)))
         inci.append(random.choice(PRESERVATIVES_SAFE))
         
-    # 4. Отдушки (иногда)
-    if random.random() > 0.6:
-        inci.append(random.choice(FRAGRANCES))
-        
-    # 5. Технические добавки (загустители и т.д.)
-    inci.append("Xanthan Gum")
-    inci.append("Citric Acid")
+    # 4. Загустители/эмульгаторы
+    inci.extend(random.sample(THICKENERS, random.randint(1, 2)))
     
-    # Перемешиваем, чтобы порядок был как в реальном INCI (по убыванию массы примерно)
-    random.shuffle(inci)
-    return list(dict.fromkeys(inci)) # Убираем дубликаты, сохраняя порядок
+    # 5. Отдушки (в конце, <1%)
+    if random.random() > 0.5:
+        inci.extend(random.sample(FRAGRANCES, random.randint(1, 2)))
+        
+    # 6. Стабилизаторы, хелаторы, pH (в самом конце)
+    inci.extend(random.sample(ADJUNCTS, random.randint(1, 2)))
+    
+    # Добавляем случайные "шумовые" ингредиенты для длины 15-25
+    noise_pool = [k for k in INGREDIENT_KB.keys() if k not in set(inci)]
+    inci.extend(random.sample(noise_pool, random.randint(3, 6)))
+    
+    # Легкий шаффл внутри групп, чтобы не выглядело как конвейер, но сохранялся общий порядок
+    random.shuffle(inci[3:10])
+    random.shuffle(inci[10:])
+    
+    return list(dict.fromkeys(inci)) # Убираем дубликаты
 
-# --- ГЕНЕРАЦИЯ H1 ---
-
+# ==============================================================================
+# 4. ГЕНЕРАЦИЯ H1 (NL ЗАПРОСЫ)
+# ==============================================================================
 def generate_h1_dataset():
-    """
-    Генерирует 50+ запросов с более сложной логикой Ground Truth.
-    """
-    # Расширенный пул запросов
     base_queries = [
-        # Сложные/Смешанные запросы
         {"query": "увлажняющий крем для сухой кожи без отдушек", "tags": ["dry", "moisturizer", "fragrance-free"]},
         {"query": "сыворотка от пигментации с витамином с", "tags": ["brightening", "vitamin-c", "serum"]},
         {"query": "очищающее средство для чувствительной кожи розацеа", "tags": ["sensitive", "rosacea", "cleanser"]},
@@ -103,8 +144,6 @@ def generate_h1_dataset():
         {"query": "гель умывалка без сульфатов sls sles", "tags": ["cleanser", "sulfate-free", "gentle"]},
         {"query": "крем барьерный восстанавливающий церамиды", "tags": ["repair", "ceramides", "sensitive"]},
         {"query": "пилинг энзимный мягкий для лица", "tags": ["exfoliant", "enzyme", "gentle"]},
-        
-        # Сленг и опечатки (симуляция реальных логов)
         {"query": "крим от прыщей", "tags": ["acne", "moisturizer"]},
         {"query": "умывалка для жирной кожи", "tags": ["oily", "cleanser"]},
         {"query": "гиалуронка сыворотка", "tags": ["hydration", "serum"]},
@@ -112,63 +151,33 @@ def generate_h1_dataset():
         {"query": "мицеллярка для глаз", "tags": ["cleanser", "eyes"]},
     ]
     
-    # Добираем синтетикой до 50
     categories = ["cleanser", "toner", "serum", "moisturizer", "mask", "spf"]
     skin_types = ["dry", "oily", "sensitive", "normal", "combination"]
     concerns = ["acne", "aging", "pigmentation", "hydration", "redness"]
+    ru_cat = {"cleanser": "средство для умывания", "toner": "тоник", "serum": "сыворотка", "moisturizer": "крем", "mask": "маска", "spf": "санскрин"}
+    ru_skin = {"dry": "сухой", "oily": "жирной", "sensitive": "чувствительной", "normal": "нормальной", "combination": "комбинированной"}
+    ru_conc = {"acne": "акне", "aging": "старения", "pigmentation": "пигментации", "hydration": "увлажнения", "redness": "покраснений"}
     
-    synthetic_count = 0
-    while len(base_queries) < 50:
+    while len(base_queries) < 100:
         cat = random.choice(categories)
         skin = random.choice(skin_types)
         conc = random.choice(concerns)
-        
-        templates = [
-            f"{cat} for {skin} skin with {conc}",
-            f"best {cat} for {conc} on {skin} skin",
-            f"{skin} skin {cat} against {conc}"
-        ]
-        # Простой перевод на русский для примера (в реальности лучше иметь русские шаблоны)
-        ru_cat = {"cleanser": "средство для умывания", "toner": "тоник", "serum": "сыворотка", "moisturizer": "крем", "mask": "маска", "spf": "санскрин"}[cat]
-        ru_skin = {"dry": "сухой", "oily": "жирной", "sensitive": "чувствительной", "normal": "нормальной", "combination": "комбинированной"}[skin]
-        ru_conc = {"acne": "акне", "aging": "старения", "pigmentation": "пигментации", "hydration": "увлажнения", "redness": "покраснений"}[conc]
-        
-        query = f"{ru_cat} для {ru_skin} кожи от {ru_conc}"
-        
-        base_queries.append({
-            "query": query,
-            "tags": [skin, cat, conc]
-        })
-        synthetic_count += 1
+        query = f"{ru_cat[cat]} для {ru_skin[skin]} кожи от {ru_conc[conc]}"
+        base_queries.append({"query": query, "tags": [skin, cat, conc]})
 
-    # Генерация пула SKU с тегами для реалистичного GT
-    # В реальности это делается по базе, здесь симулируем
     all_skus = [f"sku_{i:04d}" for i in range(1, 2501)]
-    # Присваиваем каждому SKU случайные теги (симуляция базы данных)
-    sku_tags_map = {}
-    for sku in all_skus:
-        # У каждого товара есть 2-4 случайных тега
-        possible_tags = ["dry", "oily", "sensitive", "normal", "cleanser", "serum", "moisturizer", "acne", "aging", "fragrance-free", "spf"]
-        sku_tags_map[sku] = random.sample(possible_tags, random.randint(2, 4))
+    sku_tags_map = {sku: random.sample(["dry", "oily", "sensitive", "normal", "cleanser", "serum", "moisturizer", "acne", "aging", "fragrance-free", "spf"], random.randint(2, 4)) for sku in all_skus}
 
     dataset_h1 = []
     for idx, item in enumerate(base_queries):
         query_tags = item["tags"]
-        
-        # Находим "релевантные" SKU (у которых есть пересечение тегов)
-        relevant_skus = []
-        for sku, tags in sku_tags_map.items():
-            # Если хотя бы 2 тега совпадают - считаем релевантным
-            if len(set(query_tags).intersection(set(tags))) >= 2:
-                relevant_skus.append(sku)
-        
-        # Если нашли мало, доберем случайных (для симуляции)
+        relevant_skus = [sku for sku, tags in sku_tags_map.items() if len(set(query_tags).intersection(set(tags))) >= 2]
         if len(relevant_skus) < 3:
             relevant_skus += random.sample(all_skus, 3)
             
-        ground_truth = list(set(relevant_skus))[:5] # Берем топ-5 релевантных
+        ground_truth = list(set(relevant_skus))[:5]
 
-        record = {
+        dataset_h1.append({
             "query_id": f"nl_{idx+1:03d}",
             "query": item["query"],
             "ground_truth_product_ids": ground_truth,
@@ -177,44 +186,29 @@ def generate_h1_dataset():
             "agreement": "full",
             "source": "synthetic" if idx >= 10 else "logs",
             "metadata_tags": query_tags
-        }
-        dataset_h1.append(record)
+        })
 
     path = os.path.join(OUTPUT_DIR, "eval_dataset_nl_queries.jsonl")
     with open(path, 'w', encoding='utf-8') as f:
         for record in dataset_h1:
             f.write(json.dumps(record, ensure_ascii=False) + '\n')
-    
     print(f"[H1] Dataset generated: {path} ({len(dataset_h1)} records)")
 
-# --- ГЕНЕРАЦИЯ H2 ---
-
+# ==============================================================================
+# 5. ГЕНЕРАЦИЯ H2 (INCI ПРОДУКТЫ)
+# ==============================================================================
 def generate_h2_dataset():
-    """
-    Генерирует 70 уникальных продуктов с помощью комбинаторики ингредиентов.
-    """
     dataset_h2 = []
-    
-    # Типы продуктов для генерации
-    product_types = ["normal"] * 40 + ["active"] * 20 + ["problematic"] * 10
-    
-    # Бренды для разнообразия names
-    brands = ["La Roche-Posay", "CeraVe", "Vichy", "The Ordinary", "Bioderma", "Clinique", "Custom Brand"]
+    # Баланс типов: 60% обычные, 25% активные, 15% проблемные
+    product_types = ["normal"] * 60 + ["active"] * 25 + ["problematic"] * 15
     
     for idx, p_type in enumerate(product_types):
-        # Генерируем уникальный состав
-        inci_list = generate_unique_inci_list(product_type=p_type)
+        inci_list = generate_realistic_inci(product_type=p_type)
         
-        # Формируем Ground Truth на основе INGREDIENT_KB
-        ground_truth_cats = {}
-        for ing in inci_list:
-            # Если ингредиент есть в базе - берем категорию, иначе neutral
-            ground_truth_cats[ing] = INGREDIENT_KB.get(ing, "neutral")
-            
-        brand = random.choice(brands)
-        prod_name = f"{brand} Product Type {p_type.upper()} #{idx+1}"
+        ground_truth_cats = {ing: INGREDIENT_KB.get(ing, "neutral") for ing in inci_list}
+        prod_name = generate_realistic_name()
         
-        record = {
+        dataset_h2.append({
             "product_id": f"sku_test_{idx+1:04d}",
             "product_name": prod_name,
             "inci_list": inci_list,
@@ -223,18 +217,16 @@ def generate_h2_dataset():
             "annotator_2": "Expert_Cosmetologist_Sim",
             "kappa": 0.85,
             "sources": ["EU 1223/2009", "EWG Skin Deep", "CIR"],
-            "product_type_gen": p_type # метка для внутреннего анализа
-        }
-        dataset_h2.append(record)
+            "product_type_gen": p_type
+        })
 
     path = os.path.join(OUTPUT_DIR, "eval_dataset_inci.jsonl")
     with open(path, 'w', encoding='utf-8') as f:
         for record in dataset_h2:
             f.write(json.dumps(record, ensure_ascii=False) + '\n')
-            
     print(f"[H2] Dataset generated: {path} ({len(dataset_h2)} records)")
 
 if __name__ == "__main__":
     generate_h1_dataset()
     generate_h2_dataset()
-    print("Datasets ready for evaluation.")
+    print("✅ Datasets ready for evaluation.")
