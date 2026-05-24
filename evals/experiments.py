@@ -10,8 +10,8 @@ from config import EvalSettings
 
 # --- КОНФИГУРАЦИЯ ---
 API_BASE_URL = "http://195.209.219.147:8000" 
-DATASET_H1_PATH = "eval/eval_dataset_nl_queries.jsonl"
-DATASET_H2_PATH = "eval/eval_dataset_inci.jsonl"
+DATASET_H1_PATH = "evals/eval_dataset_nl_queries.jsonl"
+DATASET_H2_PATH = "evals/eval_dataset_inci.jsonl"
 GOLDAPPLE_DB_PATH = "data/goldapple_dataset.json"
 REQUEST_TIMEOUT = 120 
 
