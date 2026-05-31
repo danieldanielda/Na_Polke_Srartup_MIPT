@@ -1,0 +1,505 @@
+{
+  "mean_recall": 0.8075,
+  "details": [
+    {
+      "product_id": "15240200004",
+      "mean_recall": 0.85,
+      "classified_count": 12
+    },
+    {
+      "product_id": "19000000401",
+      "mean_recall": 0.92,
+      "classified_count": 27
+    },
+    {
+      "product_id": "19000002252",
+      "mean_recall": 0.88,
+      "classified_count": 10
+    },
+    {
+      "product_id": "19000005653",
+      "mean_recall": 0.89,
+      "classified_count": 8
+    },
+    {
+      "product_id": "19000011900",
+      "mean_recall": 0.75,
+      "classified_count": 16
+    },
+    {
+      "product_id": "19000012246",
+      "mean_recall": 0.78,
+      "classified_count": 30
+    },
+    {
+      "product_id": "19000012366",
+      "mean_recall": 0.82,
+      "classified_count": 23
+    },
+    {
+      "product_id": "19000026521",
+      "mean_recall": 0.70,
+      "classified_count": 21
+    },
+    {
+      "product_id": "19000037975",
+      "mean_recall": 0.95,
+      "classified_count": 29
+    },
+    {
+      "product_id": "19000037985",
+      "mean_recall": 0.80,
+      "classified_count": 9
+    },
+    {
+      "product_id": "19000038004",
+      "mean_recall": 0.83,
+      "classified_count": 38
+    },
+    {
+      "product_id": "19000041837",
+      "mean_recall": 0.0,
+      "classified_count": 0
+    },
+    {
+      "product_id": "19000043206",
+      "mean_recall": 0.79,
+      "classified_count": 16
+    },
+    {
+      "product_id": "19000044491",
+      "mean_recall": 0.81,
+      "classified_count": 22
+    },
+    {
+      "product_id": "19000070259",
+      "mean_recall": 0.0,
+      "classified_count": 0
+    },
+    {
+      "product_id": "19000074980",
+      "mean_recall": 0.93,
+      "classified_count": 26
+    },
+    {
+      "product_id": "19000084212",
+      "mean_recall": 0.91,
+      "classified_count": 17
+    },
+    {
+      "product_id": "19000105036",
+      "mean_recall": 0.87,
+      "classified_count": 11
+    },
+    {
+      "product_id": "19000105478",
+      "mean_recall": 0.72,
+      "classified_count": 19
+    },
+    {
+      "product_id": "19000105641",
+      "mean_recall": 0.90,
+      "classified_count": 10
+    },
+    {
+      "product_id": "19000106955",
+      "mean_recall": 0.79,
+      "classified_count": 28
+    },
+    {
+      "product_id": "19000112675",
+      "mean_recall": 0.82,
+      "classified_count": 30
+    },
+    {
+      "product_id": "19000114011",
+      "mean_recall": 0.89,
+      "classified_count": 13
+    },
+    {
+      "product_id": "19000114227",
+      "mean_recall": 0.80,
+      "classified_count": 20
+    },
+    {
+      "product_id": "19000114779",
+      "mean_recall": 0.96,
+      "classified_count": 11
+    },
+    {
+      "product_id": "19000119953",
+      "mean_recall": 0.88,
+      "classified_count": 27
+    },
+    {
+      "product_id": "19000143948",
+      "mean_recall": 0.81,
+      "classified_count": 17
+    },
+    {
+      "product_id": "19000148290",
+      "mean_recall": 0.74,
+      "classified_count": 12
+    },
+    {
+      "product_id": "19000162048",
+      "mean_recall": 0.81,
+      "classified_count": 22
+    },
+    {
+      "product_id": "19000162485",
+      "mean_recall": 0.80,
+      "classified_count": 18
+    },
+    {
+      "product_id": "19000162488",
+      "mean_recall": 0.75,
+      "classified_count": 18
+    },
+    {
+      "product_id": "19000168972",
+      "mean_recall": 0.90,
+      "classified_count": 21
+    },
+    {
+      "product_id": "19000175418",
+      "mean_recall": 0.76,
+      "classified_count": 17
+    },
+    {
+      "product_id": "19000179140",
+      "mean_recall": 0.77,
+      "classified_count": 18
+    },
+    {
+      "product_id": "19000199940",
+      "mean_recall": 0.94,
+      "classified_count": 16
+    },
+    {
+      "product_id": "19000211248",
+      "mean_recall": 0.74,
+      "classified_count": 36
+    },
+    {
+      "product_id": "19000215759",
+      "mean_recall": 0.78,
+      "classified_count": 39
+    },
+    {
+      "product_id": "19000220840",
+      "mean_recall": 0.85,
+      "classified_count": 11
+    },
+    {
+      "product_id": "19000224406",
+      "mean_recall": 0.93,
+      "classified_count": 24
+    },
+    {
+      "product_id": "19000225241",
+      "mean_recall": 0.91,
+      "classified_count": 21
+    },
+    {
+      "product_id": "19000228157",
+      "mean_recall": 0.86,
+      "classified_count": 27
+    },
+    {
+      "product_id": "19000244514",
+      "mean_recall": 0.83,
+      "classified_count": 19
+    },
+    {
+      "product_id": "19000249493",
+      "mean_recall": 0.82,
+      "classified_count": 25
+    },
+    {
+      "product_id": "19000254962",
+      "mean_recall": 0.91,
+      "classified_count": 22
+    },
+    {
+      "product_id": "19000257519",
+      "mean_recall": 0.77,
+      "classified_count": 36
+    },
+    {
+      "product_id": "19000275279",
+      "mean_recall": 0.92,
+      "classified_count": 19
+    },
+    {
+      "product_id": "19000275295",
+      "mean_recall": 0.94,
+      "classified_count": 11
+    },
+    {
+      "product_id": "19000276973",
+      "mean_recall": 0.75,
+      "classified_count": 18
+    },
+    {
+      "product_id": "19000280287",
+      "mean_recall": 0.94,
+      "classified_count": 21
+    },
+    {
+      "product_id": "19000283329",
+      "mean_recall": 0.78,
+      "classified_count": 19
+    },
+    {
+      "product_id": "19000294676",
+      "mean_recall": 0.75,
+      "classified_count": 18
+    },
+    {
+      "product_id": "19000303247",
+      "mean_recall": 0.91,
+      "classified_count": 22
+    },
+    {
+      "product_id": "19000303294",
+      "mean_recall": 0.79,
+      "classified_count": 28
+    },
+    {
+      "product_id": "19000305231",
+      "mean_recall": 0.75,
+      "classified_count": 29
+    },
+    {
+      "product_id": "19000306323",
+      "mean_recall": 0.65,
+      "classified_count": 35
+    },
+    {
+      "product_id": "19000310586",
+      "mean_recall": 0.89,
+      "classified_count": 19
+    },
+    {
+      "product_id": "19000312779",
+      "mean_recall": 0.76,
+      "classified_count": 20
+    },
+    {
+      "product_id": "19000316535",
+      "mean_recall": 0.81,
+      "classified_count": 21
+    },
+    {
+      "product_id": "19000318642",
+      "mean_recall": 0.87,
+      "classified_count": 32
+    },
+    {
+      "product_id": "19000320265",
+      "mean_recall": 0.85,
+      "classified_count": 25
+    },
+    {
+      "product_id": "19000321719",
+      "mean_recall": 0.97,
+      "classified_count": 21
+    },
+    {
+      "product_id": "19000330315",
+      "mean_recall": 0.88,
+      "classified_count": 24
+    },
+    {
+      "product_id": "19000331826",
+      "mean_recall": 0.94,
+      "classified_count": 17
+    },
+    {
+      "product_id": "19000335111",
+      "mean_recall": 0.75,
+      "classified_count": 31
+    },
+    {
+      "product_id": "19000342374",
+      "mean_recall": 0.91,
+      "classified_count": 26
+    },
+    {
+      "product_id": "19000342834",
+      "mean_recall": 0.78,
+      "classified_count": 32
+    },
+    {
+      "product_id": "19000343079",
+      "mean_recall": 0.93,
+      "classified_count": 12
+    },
+    {
+      "product_id": "19000353601",
+      "mean_recall": 0.95,
+      "classified_count": 16
+    },
+    {
+      "product_id": "19000365967",
+      "mean_recall": 0.91,
+      "classified_count": 16
+    },
+    {
+      "product_id": "19000379074",
+      "mean_recall": 0.92,
+      "classified_count": 20
+    },
+    {
+      "product_id": "19000379083",
+      "mean_recall": 0.70,
+      "classified_count": 26
+    },
+    {
+      "product_id": "19000390317",
+      "mean_recall": 0.72,
+      "classified_count": 21
+    },
+    {
+      "product_id": "19000399036",
+      "mean_recall": 0.88,
+      "classified_count": 42
+    },
+    {
+      "product_id": "19000402912",
+      "mean_recall": 0.96,
+      "classified_count": 31
+    },
+    {
+      "product_id": "19000412802",
+      "mean_recall": 0.79,
+      "classified_count": 30
+    },
+    {
+      "product_id": "19000416816",
+      "mean_recall": 0.92,
+      "classified_count": 19
+    },
+    {
+      "product_id": "19000433625",
+      "mean_recall": 0.78,
+      "classified_count": 15
+    },
+    {
+      "product_id": "19000435991",
+      "mean_recall": 0.88,
+      "classified_count": 20
+    },
+    {
+      "product_id": "19000444803",
+      "mean_recall": 0.80,
+      "classified_count": 15
+    },
+    {
+      "product_id": "19000453362",
+      "mean_recall": 0.78,
+      "classified_count": 27
+    },
+    {
+      "product_id": "19000454331",
+      "mean_recall": 0.94,
+      "classified_count": 16
+    },
+    {
+      "product_id": "19000459194",
+      "mean_recall": 0.85,
+      "classified_count": 25
+    },
+    {
+      "product_id": "19000460909",
+      "mean_recall": 0.90,
+      "classified_count": 26
+    },
+    {
+      "product_id": "19760303639",
+      "mean_recall": 0.90,
+      "classified_count": 28
+    },
+    {
+      "product_id": "19760310833",
+      "mean_recall": 0.89,
+      "classified_count": 15
+    },
+    {
+      "product_id": "30280200005",
+      "mean_recall": 0.82,
+      "classified_count": 27
+    },
+    {
+      "product_id": "89141600004",
+      "mean_recall": 0.77,
+      "classified_count": 32
+    },
+    {
+      "product_id": "89270300021",
+      "mean_recall": 0.80,
+      "classified_count": 10
+    },
+    {
+      "product_id": "90011800001",
+      "mean_recall": 0.77,
+      "classified_count": 31
+    },
+    {
+      "product_id": "99000002280",
+      "mean_recall": 0.86,
+      "classified_count": 28
+    },
+    {
+      "product_id": "99000002798",
+      "mean_recall": 0.79,
+      "classified_count": 24
+    },
+    {
+      "product_id": "99000020100",
+      "mean_recall": 0.93,
+      "classified_count": 16
+    },
+    {
+      "product_id": "99000030026",
+      "mean_recall": 0.74,
+      "classified_count": 30
+    },
+    {
+      "product_id": "99000036605",
+      "mean_recall": 0.80,
+      "classified_count": 12
+    },
+    {
+      "product_id": "99000043078",
+      "mean_recall": 0.78,
+      "classified_count": 30
+    },
+    {
+      "product_id": "99000047856",
+      "mean_recall": 0.75,
+      "classified_count": 20
+    },
+    {
+      "product_id": "99000060763",
+      "mean_recall": 0.93,
+      "classified_count": 32
+    },
+    {
+      "product_id": "99000092455",
+      "mean_recall": 0.85,
+      "classified_count": 12
+    },
+    {
+      "product_id": "99000105664",
+      "mean_recall": 0.94,
+      "classified_count": 26
+    },
+    {
+      "product_id": "99000118732",
+      "mean_recall": 0.91,
+      "classified_count": 31
+    }
+  ]
+}
