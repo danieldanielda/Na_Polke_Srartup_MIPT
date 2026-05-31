@@ -1,9 +1,9 @@
 {
-  "mean_recall": 0.8075,
+  "mean_recall": 0.8047,
   "details": [
     {
       "product_id": "15240200004",
-      "mean_recall": 0.85,
+      "mean_recall": 0.84,
       "classified_count": 12
     },
     {
